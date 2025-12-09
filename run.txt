@@ -1,0 +1,71 @@
+LOCAL DEVELOPMENT:
+
+BACKEND:
+cd server
+npm install
+npm run dev
+
+FRONTEND (new terminal):
+cd client
+npm install
+npm run dev
+
+BROWSER:
+http://localhost:3000
+
+---
+
+DIGITAL OCEAN DEPLOYMENT:
+
+1. INITIAL SETUP:
+sudo apt update
+sudo apt install nodejs npm nginx -y
+sudo npm install -g pm2
+
+2. CLONE/UPLOAD PROJECT:
+cd /var/www
+git clone <your-repo-url> portfolio
+cd portfolio
+
+3. INSTALL DEPENDENCIES:
+cd server
+npm install
+cd ../client
+npm install
+cd ..
+
+4. ENVIRONMENT VARIABLES:
+cd server
+nano .env
+(Add MONGODB_URL, JWT_SECRET, HF_TOKEN)
+
+5. START WITH PM2:
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 startup
+
+6. CONFIGURE NGINX:
+sudo cp nginx.conf /etc/nginx/sites-available/portfolio
+sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl restart nginx
+
+7. FIREWALL:
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw allow 22
+sudo ufw enable
+
+8. SSL (OPTIONAL):
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d surajkumariitm.me -d www.surajkumariitm.me
+
+ACCESS:
+http://surajkumariitm.me or https://surajkumariitm.me
+
+PM2 COMMANDS:
+pm2 status
+pm2 logs
+pm2 restart all
+pm2 stop all
